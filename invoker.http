@@ -1,0 +1,25 @@
+
+@endpoint=http://127.0.0.1:1323
+
+GET {{endpoint}}/api/v1/ HTTP/1.1
+Content-Content-Type: application/json
+
+###
+
+POST {{endpoint}}/api/v1/register HTTP/1.1
+Content-Type: application/json
+    
+    {
+        "username": "Ronald",
+        "phone": "1234567890",
+        "email": "ronyg14@yahoo.com",
+        "password": "test"
+    }
+###
+POST {{endpoint}}/api/v1/login HTTP/1.1
+Content-Type: application/json
+    
+    {
+        "email": "ronyg14@yahoo.com",
+        "password": "test
+    }
