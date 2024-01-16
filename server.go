@@ -4,27 +4,36 @@ import (
 	"net/http"
 
 	"github.com/chigaji/budgeterapp/controllers"
+	"github.com/chigaji/budgeterapp/models"
+	"github.com/chigaji/budgeterapp/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 
+	// connect to database
+	models.ConnectToDatabase()
+
 	e := echo.New()
+
+	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Routes
 
-	r.GET("/", func(c echo.Context) error {
+	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "Welcome to the financial budgeter app's API!")
 	})
 
 	e.POST("/register", controllers.Register)
 	e.POST("/login", controllers.Login)
 
+	// Restricted routes
 	r := e.Group("/api/v1")
-	r.Use((middleware.JWT([]byte("secret"))))
+
+	r.Use(middleware.JWT([]byte(utils.JwtSecrete)))
 
 	r.GET("/expenses", controllers.GetExpenses)
 	r.POST("/expenses", controllers.AddExpense)
