@@ -17,13 +17,15 @@ func main() {
 
 	e := echo.New()
 
+	// Use custom logger
+	customLogger := utils.NewCustomLogger("main")
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Routes
-
 	e.GET("/", func(c echo.Context) error {
+		customLogger.Log("Welcome to the financial budgeter app's API!")
 		return c.JSON(http.StatusOK, "Welcome to the financial budgeter app's API!")
 	})
 
