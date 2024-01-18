@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strings"
 	"time"
 
 	"github.com/chigaji/budgeterapp/models"
@@ -9,6 +10,8 @@ import (
 )
 
 const JwtSecrete = "budgeterapp"
+
+// var ulogger = NewCustomLogger("utils/authentification")
 
 func GenerateToken(user models.User) (string, error) {
 	claims := jwt.MapClaims{
@@ -28,7 +31,11 @@ func GenerateToken(user models.User) (string, error) {
 }
 
 func ExtractUserIdFromToken(c echo.Context) (uint, error) {
-	tokenString := c.Request().Header.Get("Authorization")
+
+	bearerToken := c.Request().Header.Get("Authorization")
+
+	// get the string after Bearer
+	tokenString := strings.Split(bearerToken, "Bearer ")[1]
 
 	if tokenString == "" {
 		return 0, jwt.ErrSignatureInvalid
