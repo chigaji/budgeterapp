@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/chigaji/budgeterapp/models"
@@ -8,19 +9,22 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func AddExpense(c echo.Context) error {
+var logger1 = utils.NewCustomLogger("controllers/expense_controller")
 
+func AddExpense(c echo.Context) error {
 	// extract user id from token
 	userID, err := utils.ExtractUserIdFromToken(c)
+
+	logger1.Log(fmt.Sprint("User Id : ", userID))
 
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
 	}
 	// pass and validate expense data from the request body
-
 	var expense models.Expense
 
 	if err := c.Bind(&expense); err != nil {
+		logger1.Log(fmt.Sprint("Error: ", err))
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 	}
 
@@ -29,6 +33,9 @@ func AddExpense(c echo.Context) error {
 
 	// add expense to database
 	models.DB.Create(&expense)
+
+	// log output
+	logger1.Log(fmt.Sprint("Expense created: ", expense))
 
 	// return success response and status code to the client
 	return c.JSON(http.StatusCreated, expense)

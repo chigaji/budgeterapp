@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/chigaji/budgeterapp/models"
@@ -9,35 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var blogger = utils.NewCustomLogger("utils/budget_controller")
+
 func AddBudget(c echo.Context) error {
-
-	userID, err := utils.ExtractUserIdFromToken(c)
-
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
-	}
-
-	log.Fatal(userID)
-
-	//add budget to database and return to client
-
-	return nil
-}
-
-func getBudgets(c echo.Context) error {
-	userID, err := utils.ExtractUserIdFromToken(c)
-
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
-	}
-	log.Fatal(userID)
-
-	// get all budgets from database and return to client
-	return nil
-}
-
-func AddBugdget(c echo.Context) error {
-
+	blogger.Log("AddBudget called...")
 	// extract user id from token
 	userID, err := utils.ExtractUserIdFromToken(c)
 
@@ -49,6 +24,7 @@ func AddBugdget(c echo.Context) error {
 	var budget models.Budget
 
 	if err := c.Bind(&budget); err != nil {
+		blogger.Log(err.Error())
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 	}
 
@@ -58,6 +34,7 @@ func AddBugdget(c echo.Context) error {
 	// add expense to database
 	models.DB.Create(&budget)
 
+	blogger.Log(fmt.Sprint("Budget added : ", budget))
 	// return success response and status code to the client
 	return c.JSON(http.StatusCreated, budget)
 }
