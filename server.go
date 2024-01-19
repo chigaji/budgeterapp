@@ -19,8 +19,11 @@ func main() {
 
 	// Use custom logger
 	customLogger := utils.NewCustomLogger("main")
+
+	//customize logging
+
 	// Middleware
-	e.Use(middleware.Logger())
+	e.Use(utils.NewCustomHTTPLogger())
 	e.Use(middleware.Recover())
 
 	// Routes
