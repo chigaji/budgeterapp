@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/chigaji/budgeterapp/models"
 	"github.com/chigaji/budgeterapp/utils"
@@ -59,6 +60,27 @@ func GetExpenses(c echo.Context) error {
 	return c.JSON(http.StatusOK, expenses)
 }
 
+func GetExpense(c echo.Context) error {
+	// extract user id from token
+	userID, err := utils.ExtractUserIdFromToken(c)
+
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+	//Get expense ID from req.param
+	expenseID, err := strconv.Atoi(c.Param("id"))
+
+	expense := models.Expense{}
+
+	//retrieve the expense from the db
+	if err := models.DB.First(&expense, "ID = ? AND user_id = ?", expenseID, userID).Error; err != nil {
+		blogger.Log(fmt.Sprint("Error:", err))
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Not found"})
+	}
+	//return the expense
+	return c.JSON(http.StatusOK, expense)
+}
+
 func UpdateExpense(c echo.Context) error {
 	// extract user id from token
 	userID, err := utils.ExtractUserIdFromToken(c)
@@ -67,10 +89,21 @@ func UpdateExpense(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
 	}
 
-	// retrieve and validate expense data from the request body
+	//Get expense ID from req.param
+	expenseID, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid expense ID"})
+	}
 
 	var updateExpense models.Expense
 
+	// Retrieve the expense from the DB
+	if err := models.DB.First(&updateExpense, expenseID).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Expense not found"})
+	}
+
+	// retrieve and validate expense data from the request body
 	if err := c.Bind(&updateExpense); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 	}
@@ -80,6 +113,8 @@ func UpdateExpense(c echo.Context) error {
 
 	// update expense in the database
 	models.DB.Save(&updateExpense)
+
+	logger1.Log(fmt.Sprint("Updated Expense : ", updateExpense))
 
 	// return success response and status code to the client
 	return c.JSON(http.StatusOK, updateExpense)
@@ -99,7 +134,6 @@ func DeleteExpense(c echo.Context) error {
 	//delete expense from the database
 	models.DB.Where("user_id = ? AND id = ?", userID, expenseID).Delete(&models.Expense{})
 
-	// return success response and status code to the client
-	// return c.JSON(http.StatusNoContent, map[string]string{"message": "Expense deleted successfully"})
+	logger1.Log(fmt.Sprint("Deleted expense: ", expenseID))
 	return c.NoContent(http.StatusNoContent)
 }

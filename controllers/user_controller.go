@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// var logger = utils.NewCustomLogger("controllers/user_controller")
+
 func Register(c echo.Context) error {
 	var user models.User
 
@@ -52,7 +54,6 @@ func Login(c echo.Context) error {
 	}
 
 	// verify creddentials and generate token
-
 	if err := utils.ValidatePassword(user.Password, loginData.Password); err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid credentials"})
 	}

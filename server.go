@@ -42,11 +42,13 @@ func main() {
 
 	r.GET("/expenses", controllers.GetExpenses)
 	r.POST("/expenses", controllers.AddExpense)
+	r.GET("/expenses/:id", controllers.GetExpense)
 	r.PUT("/expenses/:id", controllers.UpdateExpense)
 	r.DELETE("/expenses/:id", controllers.DeleteExpense)
 
-	r.GET("/budgets", controllers.GetBudgets)
 	r.POST("/budgets", controllers.AddBudget)
+	r.GET("/budgets", controllers.GetBudgets)
+	r.GET("/budgets/:id", controllers.GetBudget)
 	r.PUT("/budgets/:id", controllers.UpdateBudget)
 	r.DELETE("/budgets/:id", controllers.DeleteBudget)
 

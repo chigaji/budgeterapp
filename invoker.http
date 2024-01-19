@@ -1,25 +1,149 @@
 
 @endpoint=http://127.0.0.1:1323
 
-GET {{endpoint}}/api/v1/ HTTP/1.1
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDU3NDE1ODMsInVzZXJfaWQiOjZ9.ZUNdpSosOFU-_xxn0e1JLwpY9E0qBIs1_RQ2MrAObAg
+
+GET {{endpoint}}/ HTTP/1.1
 Content-Content-Type: application/json
 
 ###
 
-POST {{endpoint}}/api/v1/register HTTP/1.1
+#################################################
+#            USER REGISTRATION                  #
+################################################
+POST {{endpoint}}/register HTTP/1.1
 Content-Type: application/json
     
-    {
-        "username": "Ronald",
-        "phone": "1234567890",
-        "email": "ronyg14@yahoo.com",
-        "password": "test"
+     {
+        "username": "minju2",
+        "password": "minju2100%"
     }
 ###
-POST {{endpoint}}/api/v1/login HTTP/1.1
+
+#################################################
+#         USER LOGIN                           #
+################################################
+POST {{endpoint}}/login HTTP/1.1
 Content-Type: application/json
     
+   
     {
-        "email": "ronyg14@yahoo.com",
-        "password": "test
+        "username": "minju2",
+        "password": "minju2100%"
     }
+
+#***************************************************************************
+
+#################################################
+#          GET ALL EXPENSES                     #
+################################################
+GET {{endpoint}}/api/v1/expenses HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+#################################################
+#          GET EXPENSE BY ID                    #
+################################################
+GET {{endpoint}}/api/v1/expenses/3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+#################################################
+#          ADD AN EXPENSE                       #
+################################################
+POST {{endpoint}}/api/v1/expenses HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+    {
+        "amount": 150000,
+        "category": "utilities",
+        "description": "utilities"
+    }
+
+
+#################################################
+#          UPDATE AN EXPENSE                    #
+################################################
+PUT {{endpoint}}/api/v1/expenses/3 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+    {
+        "amount": 200000,
+        "category": "phone bills",
+        "description": "phone bills"
+    }
+
+
+#################################################
+#          DELETE AN EXPENSE                     #
+################################################
+DELETE  {{endpoint}}/api/v1/expenses/6 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+
+#*****************************************************************************
+
+#################################################
+#          GET ALL BUDGETS                      #
+################################################
+GET {{endpoint}}/api/v1/budgets HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+
+#################################################
+#          GET A BUDGET BY ID                   #
+################################################
+GET {{endpoint}}/api/v1/budgets/6 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+#################################################
+#          ADD A BUDGET                         #
+################################################
+POST {{endpoint}}/api/v1/budgets HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+    {
+        "amount": 700000,
+        "category": "January Budget",
+        "description": "January Budget allocation"
+    }
+
+
+#################################################
+#          UPDATE A BUDGET                      #
+################################################
+PUT {{endpoint}}/api/v1/budgets/5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+     {
+        "amount": 2000000,
+        "category": "January Budget",
+        "description": "January Budget allocation"
+    }
+
+
+#################################################
+#          DELETE A BUDGET                      #
+################################################
+DELETE  {{endpoint}}/api/v1/budgets/5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+
+#*****************************************************************************
+
+#################################################
+#          GENERATE FINANCIAL REPORT            #
+################################################
+GET {{endpoint}}/api/v1/reports HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}} 
