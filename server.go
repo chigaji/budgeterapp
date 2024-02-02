@@ -17,6 +17,13 @@ func main() {
 
 	e := echo.New()
 
+	//add cors
+	e.Use(middleware.CORS())
+	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"https://localhost:3000"},
+	// 	AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	// 	AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	// }))
 	// Use custom logger
 	customLogger := utils.NewCustomLogger("main")
 
